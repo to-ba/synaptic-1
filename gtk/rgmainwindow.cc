@@ -1018,18 +1018,18 @@ void RGMainWindow::buildInterface()
    _upgradeM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_upgrade_all"));
    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(_upgradeM), 
 				 get_gtk_image("system-upgrade"));
-   g_signal_connect(G_OBJECT(_upgradeB),
-                    "clicked",
-                    G_CALLBACK(cbUpgradeClicked), this);
-   g_signal_connect(G_OBJECT(_upgradeM),
-                    "activate",
-                    G_CALLBACK(cbUpgradeClicked), this);
+   // g_signal_connect(G_OBJECT(_upgradeB),
+   //                  "clicked",
+   //                  G_CALLBACK(cbUpgradeClicked), this);
+   // g_signal_connect(G_OBJECT(_upgradeM),
+   //                  "activate",
+   //                  G_CALLBACK(cbUpgradeClicked), this);
 
-   if (_config->FindB("Synaptic::NoUpgradeButtons", false) == true) {
-      gtk_widget_hide(_upgradeB);
+   // if (_config->FindB("Synaptic::NoUpgradeButtons", false) == true) {
+      gtk_widget_hide(_upgradeB); gtk_widget_hide(_upgradeM);      
       widget = GTK_WIDGET(gtk_builder_get_object(_builder, "alignment_upgrade"));
       gtk_widget_hide(widget);
-   }
+   // }
 
    _proceedB = GTK_WIDGET(gtk_builder_get_object(_builder, "button_procceed"));
    _proceedM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_proceed"));
@@ -1446,13 +1446,13 @@ void RGMainWindow::buildInterface()
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark for Upgrade"));
-   img = get_gtk_image("package-upgrade");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem),img);
-   g_object_set_data(G_OBJECT(menuitem), "me", this);
-   g_signal_connect(menuitem, "activate",
-                    (GCallback) cbPkgAction, (void *)PKG_INSTALL);
-   gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
+   // menuitem = gtk_image_menu_item_new_with_label(_("Mark for Upgrade"));
+   // img = get_gtk_image("package-upgrade");
+   // gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem),img);
+   // g_object_set_data(G_OBJECT(menuitem), "me", this);
+   // g_signal_connect(menuitem, "activate",
+   //                  (GCallback) cbPkgAction, (void *)PKG_INSTALL);
+   // gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
    menuitem = gtk_image_menu_item_new_with_label(_("Mark for Removal"));
    img = get_gtk_image("package-remove");
