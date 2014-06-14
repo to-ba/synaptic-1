@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: synaptic\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-18 18:21+0000\n"
-"PO-Revision-Date: 2014-06-14 17:54+0100\n"
+"PO-Revision-Date: 2014-06-14 19:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -1261,11 +1261,11 @@ msgstr "Biti će instalirana starija inačica"
 
 #: ../gtk/rgchangeswindow.cc:146 ../gtk/rgsummarywindow.cc:173
 msgid "To be installed"
-msgstr "Biti će instaliran"
+msgstr "Biti će instalirano"
 
 #: ../gtk/rgchangeswindow.cc:158 ../gtk/rgsummarywindow.cc:161
 msgid "To be upgraded"
-msgstr "Biti će nadograđen"
+msgstr "Biti će nadograđeo"
 
 #: ../gtk/rgchangeswindow.cc:170 ../gtk/rgsummarywindow.cc:185
 msgid "To be re-installed"
