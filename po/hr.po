@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: synaptic\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-18 18:21+0000\n"
-"PO-Revision-Date: 2014-06-14 16:06+0100\n"
+"PO-Revision-Date: 2014-06-14 17:54+0100\n"
 "Last-Translator: \n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -2682,7 +2682,7 @@ msgstr "Pogledaj u:"
 
 #: ../gtk/gtkbuilder/window_fetch.ui.h:1
 msgid "Show individual files"
-msgstr "Prikaži pojedinačne datoteke"
+msgstr "Prikaži pojedinačno datoteke"
 
 #: ../gtk/gtkbuilder/window_changes.ui.h:1
 msgid "_Mark"
