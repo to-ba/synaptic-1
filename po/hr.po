@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: synaptic\n"
-"Report-Msgid-Bugs-To: gogo <trebelnik2@gmail>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-04-18 18:21+0000\n"
-"PO-Revision-Date: 2014-06-14 15:17+0100\n"
+"PO-Revision-Date: 2014-06-14 16:06+0100\n"
 "Last-Translator: \n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -784,7 +784,7 @@ msgstr "Predložak"
 #: ../common/rpackagefilter.cc:63 ../gtk/rgpreferenceswindow.cc:51
 #: ../gtk/rgmainwindow.cc:1037 ../gtk/gtkbuilder/window_filters.ui.h:50
 msgid "Section"
-msgstr "Područje"
+msgstr "Odjeljak"
 
 #: ../common/rpackagefilter.cc:64
 msgid "Priority"
@@ -1039,7 +1039,7 @@ msgstr "Debconf paketi"
 
 #: ../common/rpackageview.cc:548 ../gtk/gtkbuilder/window_filters.ui.h:10
 msgid "Upgradable (upstream)"
-msgstr "Nadogradiv (izvorni paketi)"
+msgstr "Nadogradivo (izvorni paketi)"
 
 #: ../common/rpackageview.cc:561
 msgid "Community Maintained (installed)"
@@ -1411,7 +1411,7 @@ msgstr "Zadrži podešavanja"
 
 #: ../gtk/rgpreferenceswindow.cc:59
 msgid "Completely"
-msgstr "Kompletno"
+msgstr "Potpuno"
 
 #: ../gtk/rgpreferenceswindow.cc:62 ../gtk/rgpreferenceswindow.cc:65
 msgid "Always Ask"
@@ -1518,19 +1518,19 @@ msgstr "Preuzimanje datoteke %li od %li"
 
 #: ../gtk/rgfetchprogress.cc:411
 msgid "Queued"
-msgstr "Na čekanju"
+msgstr "Čekanje"
 
 #: ../gtk/rgfetchprogress.cc:414
 msgid "Done"
-msgstr "Gotovo"
+msgstr "Završeno"
 
 #: ../gtk/rgfetchprogress.cc:417
 msgid "Hit"
-msgstr "Pogodak"
+msgstr "Uspjelo"
 
 #: ../gtk/rgfetchprogress.cc:420
 msgid "Failed"
-msgstr "Nije uspjelo"
+msgstr "Neuspjelo"
 
 #: ../gtk/rgfiltermanager.cc:59 ../gtk/gtkbuilder/window_filters.ui.h:1
 msgid "Filters"
@@ -1761,7 +1761,7 @@ msgid ""
 "%i packages listed, %i installed, %i broken. %i to install/upgrade, %i to "
 "remove; %s will be freed"
 msgstr ""
-"%i paketa izlistano, %i instalirano, %i slomljeno. %i za instalaciju/"
+"%i paketa dostupno, %i instalirano, %i slomljeno. %i za instalaciju/"
 "nadogradnju, %i za ukloniti; %s će biti oslobođeno"
 
 #: ../gtk/rgmainwindow.cc:1943
@@ -1770,7 +1770,7 @@ msgid ""
 "%i packages listed, %i installed, %i broken. %i to install/upgrade, %i to "
 "remove; %s will be used"
 msgstr ""
-"%i paketa izlistano, %i instalirano, %i slomljeno. %i za instalaciju/"
+"%i paketa dostupno, %i instalirano, %i slomljeno. %i za instalaciju/"
 "nadogradnju, %i za ukloniti; %s će biti upotrijebljeno"
 
 #: ../gtk/rgmainwindow.cc:1949
@@ -1779,7 +1779,7 @@ msgid ""
 "%i packages listed, %i installed, %i broken. %i to install/upgrade, %i to "
 "remove"
 msgstr ""
-"%i paketa izlistano, %i instalirano, %i slomljeno. %i za instalaciju/"
+"%i paketa dostupno, %i instalirano, %i slomljeno. %i za instalaciju/"
 "nadogradnju, %i za ukloniti"
 
 #: ../gtk/rgmainwindow.cc:2015
@@ -1975,7 +1975,7 @@ msgstr "Odaberi direktorij"
 
 #: ../gtk/rgmainwindow.cc:3691
 msgid "Please select a directory"
-msgstr "Molim, odaberite direktorij"
+msgstr "Odaberite direktorij"
 
 #: ../gtk/rgrepositorywin.cc:100
 msgid ""
@@ -2682,7 +2682,7 @@ msgstr "Pogledaj u:"
 
 #: ../gtk/gtkbuilder/window_fetch.ui.h:1
 msgid "Show individual files"
-msgstr "Prikaži za pojedine datoteke"
+msgstr "Prikaži pojedinačne datoteke"
 
 #: ../gtk/gtkbuilder/window_changes.ui.h:1
 msgid "_Mark"
@@ -2752,7 +2752,7 @@ msgstr "Osvježavanje zastarjelih informacija paketa:"
 
 #: ../gtk/gtkbuilder/window_preferences.ui.h:14
 msgid "<b>Applying Changes</b>"
-msgstr "<b>Primjenjujem promjene</b>"
+msgstr "<b>Primjenjivanje promjena</b>"
 
 #: ../gtk/gtkbuilder/window_preferences.ui.h:15
 msgid "Apply changes in a terminal window"
@@ -3188,7 +3188,7 @@ msgstr "Automatski instalirani, ali više nisu potrebni"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:40
 msgid "Policy broken"
-msgstr "Slomljeno"
+msgstr "Slomljena pravila"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:41
 msgid "Currently in broken policy state"
@@ -3457,10 +3457,10 @@ msgid ""
 "There are still marked changes that have not yet been applied. They will get "
 "lost if you choose to quit 'Synaptic'."
 msgstr ""
-"<b><big>Izađi i poništi označene promjene?</big></b>\n"
+"<b><big>Zatvori i poništi označene promjene?</big></b>\n"
 "\n"
 "Neke promjene još uvijek su označene ali nisu primijenjene i biti će "
-"izgubljene ako odlučite izaći iz Synaptica."
+"izgubljene ako odlučite zatvoriti Synaptic."
 
 #: ../gtk/gtkbuilder/dialog_conffile.ui.h:1
 msgid "_Keep"
@@ -3636,7 +3636,7 @@ msgstr "Ovisni paketi"
 
 #: ../gtk/rgpkgcdrom.cc:68
 msgid "Please insert a disc in the drive."
-msgstr "Molim, umetnete disk u uređaj."
+msgstr "Umetnete disk u uređaj."
 
 #: ../gtk/rgiconlegend.cc:77
 msgid "Package is supported"
