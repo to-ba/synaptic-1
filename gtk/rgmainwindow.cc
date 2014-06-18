@@ -3172,16 +3172,8 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
          gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
-      // Upgrade button
-      if (i == 3 && (flags & RPackage::FOutdated)
-          && !(flags & RPackage::FInstall)) {
-         gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
-         if (oneclickitem == NULL)
-            oneclickitem = item->data;
-      }
-
       // remove
-      if (i == 4 &&  (flags & RPackage::FInstalled) 
+      if (i == 3 &&  (flags & RPackage::FInstalled) 
 	  && (!(flags & RPackage::FRemove) || (flags & RPackage::FPurge)) ) {
             gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
             if (oneclickitem == NULL)
@@ -3189,17 +3181,17 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
       }
 
       // Purge
-      if (i == 5 
+      if (i == 4 
 	  && (flags&RPackage::FInstalled || flags&RPackage::FResidualConfig) 
 	  && !(flags & RPackage::FPurge) ) {
 	 gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
       // Seperator is i==6 (hide on left click)
-      if(i == 6 && event->button == 1)
+      if(i == 5 && event->button == 1)
 	 gtk_widget_hide(GTK_WIDGET(item->data));
       // Properties is i==7 (available if only one pkg is selected)
-      if (i == 7) {
+      if (i == 6) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1)
@@ -3207,10 +3199,10 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
       }
 
       // i==8 is sperator, hide on left click
-      if(i == 8 && event->button == 1)
+      if(i == 7 && event->button == 1)
 	 gtk_widget_hide(GTK_WIDGET(item->data));
       // recommends
-      if(i == 9) {
+      if(i == 8) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1) {
@@ -3223,7 +3215,7 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
 	       gtk_widget_set_sensitive(GTK_WIDGET(item->data), FALSE);	    
 	 }
       }
-      if(i == 10) {
+      if(i == 9) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1) {
