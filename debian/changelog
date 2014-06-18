@@ -1,3 +1,9 @@
+synaptic (0.81.2-3) qiana; urgency=medium
+
+  * Fixed greyed-out items in context menu
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 19 Jun 2014 00:51:53 +0100
+
 synaptic (0.81.2-2) qiana; urgency=medium
 
   * Removed the ability to upgrade packages (Synaptic isn't aware of safety levels and that's required for UI, but more importantly the selection of packages is buggy, the first CTRL+A for instance calls the resolver as if each package was to be upgraded individually as opposed to calling the upgrade on the selection as a whole. In the case of some updates, such as the recent mesa updates, this leads to the removal of clutter, and therefore totem and even Cinnamon.).
