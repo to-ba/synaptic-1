@@ -738,7 +738,7 @@
                     </child>
                     <child>
                       <object class="GtkToolButton" id="button_upgrade">
-                        <property name="visible">True</property>
+                        <property name="visible">False</property>
                         <property name="can_focus">False</property>
                         <property name="is_important">True</property>
                         <property name="label" translatable="yes">Mark All Upgrades</property>
