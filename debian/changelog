@@ -1,3 +1,10 @@
+synaptic (0.81.2-4) qiana; urgency=medium
+
+  * Fixed authentication dialog in proxy settings
+  * Improved Croatian translations
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 22 Jul 2014 11:35:20 +0200
+
 synaptic (0.81.2-3) qiana; urgency=medium
 
   * Fixed greyed-out items in context menu
