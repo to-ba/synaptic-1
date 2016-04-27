@@ -167,8 +167,7 @@ bool RGUserDialog::message(const char *msg,
 
    dia = gtk_message_dialog_new (GTK_WINDOW(_parentWindow),
                                  GTK_DIALOG_DESTROY_WITH_PARENT,
-                                 gtkmessage, gtkbuttons, "%s", "",
-			         NULL);
+                                 gtkmessage, gtkbuttons, NULL);
    GdkPixbuf *icon = get_gdk_pixbuf( "synaptic" );
    gtk_window_set_icon(GTK_WINDOW(dia), icon);
 
@@ -222,6 +221,12 @@ RGGtkBuilderUserDialog::RGGtkBuilderUserDialog(RGWindow *parent, const char *nam
    init(name);
 }
 
+RGGtkBuilderUserDialog::RGGtkBuilderUserDialog(RGWindow *parent)
+   : builder(0)
+{
+   _parentWindow = parent->window();
+}
+
 bool RGGtkBuilderUserDialog::init(const char *name)
 {
    gchar *filename = NULL;
@@ -229,7 +234,7 @@ bool RGGtkBuilderUserDialog::init(const char *name)
    guint builder_status;
    GError* error = NULL;
 
-   //cout << "RGGtkBuilderUserDialog::RGGtkBuilderUserDialog() " << name << endl;
+   //cerr << "RGGtkBuilderUserDialog::init() '" << name << "'" << endl;
 
    builder = gtk_builder_new();
    filename = g_strdup_printf("gtkbuilder/dialog_%s.ui", name);
@@ -274,7 +279,7 @@ bool RGGtkBuilderUserDialog::init(const char *name)
    g_free(main_widget);
 }
 
-int RGGtkBuilderUserDialog::run(const char *name,bool return_gtk_response)
+int RGGtkBuilderUserDialog::run(const char *name, bool return_gtk_response)
 {
    if(name != NULL)
       init(name);

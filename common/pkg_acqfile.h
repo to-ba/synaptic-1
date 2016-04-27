@@ -1,12 +1,13 @@
 // pkg_acqfile.h
 //
-//  File acquirers that Don't Suck.
-//
-// mvo: taken from aptitude with a big _thankyou_ 
 
 #include <apt-pkg/acquire-item.h>
 
-class pkgAcqFileSane:public pkgAcquire::Item
+// new APT has a proper pkgAcqFile so all good
+#if APT_PKG_MAJOR >= 5
+ #define pkgAcqFileSane pkgAcqFile
+#else
+class pkgAcqFileSane : public pkgAcquire::Item
 // This is frustrating: pkgAcqFile is **almost** good enough, but has some
 // hardcoded stuff that makes it not quite work.
 //
@@ -17,9 +18,14 @@ class pkgAcqFileSane:public pkgAcquire::Item
   unsigned int Retries;
 
 public:
-  pkgAcqFileSane(pkgAcquire *Owner, std::string URI,
-		 std::string Description, std::string ShortDesc,
-                 std::string filename);
+  pkgAcqFileSane(pkgAcquire *Owner,
+                 std::string URI,
+                 HashStringList const &hsl,
+                 unsigned long long const Size,
+		 std::string Description,
+                 std::string ShortDesc,
+                 std::string const &DestDir,
+                 std::string const &DestFilename);
 
   void Failed(std::string Message, pkgAcquire::MethodConfig *Cnf);
   std::string MD5Sum() {return Md5Hash;}
@@ -27,7 +33,4 @@ public:
   virtual ~pkgAcqFileSane() {}
 };
 
-// Hack around the broken pkgAcqArchive.
-bool get_archive(pkgAcquire *Owner, pkgSourceList *Sources,
-		 pkgRecords *Recs, pkgCache::VerIterator const &Version,
-		 std::string directory, std::string &StoreFilename);
+#endif

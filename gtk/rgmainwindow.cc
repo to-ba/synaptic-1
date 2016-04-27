@@ -107,6 +107,8 @@ enum { DEP_NAME_COLUMN,         /* text */
 };                              /* additional info (install 
                                    not installed) as text */
 
+GtkCssProvider *RGMainWindow::_fastSearchCssProvider = NULL;
+
 void RGMainWindow::changeView(int view, string subView)
 {
    if(_config->FindB("Debug::Synaptic::View",false))
@@ -474,15 +476,6 @@ void RGMainWindow::updatePackageInfo(RPackage *pkg)
 
    if(pkg->getAvailableVersions().size() > 1)
       gtk_widget_set_sensitive(_overrideVersionM, TRUE);
-
-   // set the "keep" menu icon according to the current status
-   GtkWidget *img;
-   if (!(flags & RPackage::FInstalled))
-      img = get_gtk_image("package-available");
-   else
-      img = get_gtk_image("package-installed-updated");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(_keepM), img);
-
 
 }
 
@@ -891,12 +884,12 @@ gboolean RGMainWindow::xapianDoIndexUpdate(void *data)
    if(_config->FindB("Debug::Synaptic::Xapian",false))
       std::cerr << "running update-apt-xapian-index" << std::endl;
    GPid pid;
-   char *argp[] = {"/usr/bin/nice",
+   const char *argp[] = {"/usr/bin/nice",
 		   "/usr/bin/ionice","-c3",
 		   "/usr/sbin/update-apt-xapian-index", 
 		   "--update", "-q",
 		   NULL};
-   if(g_spawn_async(NULL, argp, NULL, 
+   if(g_spawn_async(NULL, const_cast<char **>(argp), NULL, 
 		    (GSpawnFlags)(G_SPAWN_DO_NOT_REAP_CHILD),
 		    NULL, NULL, &pid, NULL)) {
       g_child_watch_add(pid,  (GChildWatchFunc)xapianIndexUpdateFinished, me);
@@ -979,6 +972,11 @@ void RGMainWindow::buildInterface()
       gtk_window_maximize(GTK_WINDOW(_win));
    RGFlushInterface();
 
+   if (_fastSearchCssProvider == NULL) {
+      _fastSearchCssProvider = gtk_css_provider_new();
+      gtk_css_provider_load_from_data(_fastSearchCssProvider,
+                                      "GtkEntry:not(:selected) { background: #F7F7BE; }", -1, NULL);
+   }
 
    g_signal_connect(gtk_builder_get_object(_builder, "menu_about"),
                     "activate",
@@ -1016,20 +1014,18 @@ void RGMainWindow::buildInterface()
    _upgradeB = GTK_WIDGET(gtk_builder_get_object(_builder, "button_upgrade"));
    gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(_upgradeB), "system-upgrade");
    _upgradeM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_upgrade_all"));
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(_upgradeM), 
-				 get_gtk_image("system-upgrade"));
-   // g_signal_connect(G_OBJECT(_upgradeB),
-   //                  "clicked",
-   //                  G_CALLBACK(cbUpgradeClicked), this);
-   // g_signal_connect(G_OBJECT(_upgradeM),
-   //                  "activate",
-   //                  G_CALLBACK(cbUpgradeClicked), this);
+   g_signal_connect(G_OBJECT(_upgradeB),
+                    "clicked",
+                    G_CALLBACK(cbUpgradeClicked), this);
+   g_signal_connect(G_OBJECT(_upgradeM),
+                    "activate",
+                    G_CALLBACK(cbUpgradeClicked), this);
 
-   // if (_config->FindB("Synaptic::NoUpgradeButtons", false) == true) {
-      gtk_widget_hide(_upgradeB); gtk_widget_hide(_upgradeM);      
+   if (_config->FindB("Synaptic::NoUpgradeButtons", false) == true) {
+      gtk_widget_hide(_upgradeB);
       widget = GTK_WIDGET(gtk_builder_get_object(_builder, "alignment_upgrade"));
       gtk_widget_hide(widget);
-   // }
+   }
 
    _proceedB = GTK_WIDGET(gtk_builder_get_object(_builder, "button_procceed"));
    _proceedM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_proceed"));
@@ -1134,43 +1130,31 @@ void RGMainWindow::buildInterface()
 
    widget = _keepM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_keep"));
    assert(_keepM);
-   img = get_gtk_image("package-available");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), img);
    g_object_set_data(G_OBJECT(widget), "me", this);
 
    widget = _installM = GTK_WIDGET(gtk_builder_get_object
                                    (_builder, "menu_install"));
    assert(_installM);
-   img = get_gtk_image("package-install");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), img);
    g_object_set_data(G_OBJECT(widget), "me", this);
 
    widget = _reinstallM = GTK_WIDGET(gtk_builder_get_object
                                      (_builder, "menu_reinstall"));
    assert(_reinstallM);
-   img = get_gtk_image("package-reinstall");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), img);
    g_object_set_data(G_OBJECT(widget), "me", this);
 
    widget = _pkgupgradeM = GTK_WIDGET(gtk_builder_get_object
-                                      (_builder, "menu_upgrade"));   
+                                      (_builder, "menu_upgrade"));
    assert(_pkgupgradeM);
-   img = get_gtk_image("package-upgrade");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), img);
-   g_object_set_data(G_OBJECT(widget), "me", this); gtk_widget_hide(_pkgupgradeM);
+   g_object_set_data(G_OBJECT(widget), "me", this);
 
    widget = _removeM = GTK_WIDGET(gtk_builder_get_object
                                   (_builder, "menu_remove"));
    assert(_removeM);
-   img = get_gtk_image("package-remove");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), img);
    g_object_set_data(G_OBJECT(widget), "me", this);
 
    widget = _purgeM = GTK_WIDGET(gtk_builder_get_object
                                  (_builder, "menu_purge"));
    assert(_purgeM);
-   img = get_gtk_image("package-purge");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(widget), img);
    g_object_set_data(G_OBJECT(widget), "me", this);
 
 #if 0
@@ -1421,51 +1405,39 @@ void RGMainWindow::buildInterface()
 
    // build popup-menu
    _popupMenu = gtk_menu_new();
-   menuitem = gtk_image_menu_item_new_with_label(_("Unmark"));
-   img = gtk_image_new_from_stock(GTK_STOCK_APPLY, GTK_ICON_SIZE_MENU);
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), img);
+   menuitem = gtk_menu_item_new_with_label(_("Unmark"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    g_signal_connect(menuitem, "activate",
                     (GCallback) cbPkgAction, (void *)PKG_KEEP);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark for Installation"));
-   img = get_gtk_image("package-install");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), img);
+   menuitem = gtk_menu_item_new_with_label(_("Mark for Installation"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    g_signal_connect(menuitem, "activate",
                     (GCallback) cbPkgAction, (void *)PKG_INSTALL);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark for Reinstallation"));
-   img = get_gtk_image("package-reinstall");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem),img);
+   menuitem = gtk_menu_item_new_with_label(_("Mark for Reinstallation"));
    g_object_set_data(G_OBJECT(menuitem),"me",this);
    g_signal_connect(menuitem, "activate",
 		    (GCallback) cbPkgAction, (void*)PKG_REINSTALL);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
 
-   // menuitem = gtk_image_menu_item_new_with_label(_("Mark for Upgrade"));
-   // img = get_gtk_image("package-upgrade");
-   // gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem),img);
-   // g_object_set_data(G_OBJECT(menuitem), "me", this);
-   // g_signal_connect(menuitem, "activate",
-   //                  (GCallback) cbPkgAction, (void *)PKG_INSTALL);
-   // gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
+   menuitem = gtk_menu_item_new_with_label(_("Mark for Upgrade"));
+   g_object_set_data(G_OBJECT(menuitem), "me", this);
+   g_signal_connect(menuitem, "activate",
+                    (GCallback) cbPkgAction, (void *)PKG_INSTALL);
+   gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark for Removal"));
-   img = get_gtk_image("package-remove");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), img);
+   menuitem = gtk_menu_item_new_with_label(_("Mark for Removal"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    g_signal_connect(menuitem, "activate",
                     (GCallback) cbPkgAction, (void *)PKG_DELETE);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark for Complete Removal"));
-   img = get_gtk_image("package-purge");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), img);
+   menuitem = gtk_menu_item_new_with_label(_("Mark for Complete Removal"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    g_signal_connect(menuitem, "activate",
                     (GCallback) cbPkgAction, (void *)PKG_PURGE);
@@ -1475,9 +1447,7 @@ void RGMainWindow::buildInterface()
 #endif
 
 #if 0  // disabled for now
-   menuitem = gtk_image_menu_item_new_with_label(_("Remove Including Orphaned Dependencies"));
-   img = get_gtk_image("package-remove");
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), img);
+   menuitem = gtk_menu_item_new_with_label(_("Remove Including Orphaned Dependencies"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    g_signal_connect(menuitem, "activate",
                     (GCallback) cbPkgAction,
@@ -1496,9 +1466,7 @@ void RGMainWindow::buildInterface()
    menuitem = gtk_separator_menu_item_new ();
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Properties"));
-   img = gtk_image_new_from_stock(GTK_STOCK_PROPERTIES,GTK_ICON_SIZE_MENU);
-   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menuitem), img);
+   menuitem = gtk_menu_item_new_with_label(_("Properties"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    g_signal_connect(menuitem, "activate",
                     (GCallback) cbDetailsWindow, this);
@@ -1508,11 +1476,11 @@ void RGMainWindow::buildInterface()
    menuitem = gtk_separator_menu_item_new ();
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark Recommended for Installation"));
+   menuitem = gtk_menu_item_new_with_label(_("Mark Recommended for Installation"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
-   menuitem = gtk_image_menu_item_new_with_label(_("Mark Suggested for Installation"));
+   menuitem = gtk_menu_item_new_with_label(_("Mark Suggested for Installation"));
    g_object_set_data(G_OBJECT(menuitem), "me", this);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 #endif
@@ -1603,11 +1571,15 @@ void RGMainWindow::buildInterface()
    if(!_lister->xapiandatabase() ||
       !FileExists("/usr/sbin/update-apt-xapian-index")) {
       gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object
-                                 (_builder, "vbox_fast_search")));
+                                 (_builder, "toolitem_fast_search")));
+      gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object
+                                 (_builder, "separatortoolitem2")));
    }
 #else
    gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object
-                              (_builder, "vbox_fast_search")));
+                              (_builder, "toolitem_fast_search")));
+   gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object
+                              (_builder, "separatortoolitem2")));
 #endif
    // stuff for the non-root mode
    if(getuid() != 0) {
@@ -1680,14 +1652,14 @@ void RGMainWindow::setStatusText(char *text)
 {
 
    int listed, installed, broken;
-   int toInstall, toReInstall, toRemove;
+   int toInstall, toRemove;
    double size;
 
 
    GtkWidget *_statusL = GTK_WIDGET(gtk_builder_get_object(_builder, "label_status"));
    assert(_statusL);
 
-   _lister->getStats(installed,broken,toInstall,toReInstall,toRemove,size);
+   _lister->getStats(installed,broken,toInstall,toRemove,size);
 
    if (text) {
       gtk_label_set_text(GTK_LABEL(_statusL), text);
@@ -1770,9 +1742,9 @@ bool RGMainWindow::restoreState()
 
    // see if we have broken packages (might be better in some
    // RGMainWindow::preGuiStart funktion)
-   int installed, broken, toInstall, toReInstall, toRemove;
+   int installed, broken, toInstall, toRemove;
    double sizeChange;
-   _lister->getStats(installed, broken, toInstall, toReInstall, toRemove, sizeChange);
+   _lister->getStats(installed, broken, toInstall, toRemove, sizeChange);
    if (broken > 0) {
       gchar *msg;
       msg = ngettext("You have %d broken package on your system!\n\n"
@@ -2053,8 +2025,8 @@ void RGMainWindow::cbOpenClicked(GtkWidget *self, void *data)
    filesel = gtk_file_chooser_dialog_new(_("Open changes"), 
 					 GTK_WINDOW(me->window()),
 					 GTK_FILE_CHOOSER_ACTION_OPEN,
-					 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					 _("_Cancel"), GTK_RESPONSE_CANCEL,
+					 _("_Open"), GTK_RESPONSE_ACCEPT,
 					 NULL);
    if(gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_ACCEPT) {
       me->setInterfaceLocked(TRUE);
@@ -2123,8 +2095,8 @@ void RGMainWindow::cbSaveAsClicked(GtkWidget *self, void *data)
    filesel = gtk_file_chooser_dialog_new(_("Save changes"), 
 					 GTK_WINDOW(me->window()),
 					 GTK_FILE_CHOOSER_ACTION_SAVE,
-					 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+					 _("_Cancel"), GTK_RESPONSE_CANCEL,
+					 _("_Save"), GTK_RESPONSE_ACCEPT,
 					 NULL);
    GtkWidget *checkButton =
       gtk_check_button_new_with_label(_("Save full state, not only changes"));
@@ -2213,13 +2185,13 @@ void RGMainWindow::cbShowSourcesWindow(GtkWidget *self, void *data)
       me->setInterfaceLocked(TRUE);
       GPid pid;
       int status;
-      char *argv[5];
+      const char *argv[5];
       argv[0] = "/usr/bin/software-properties-gtk";
       argv[1] = "-n";
       argv[2] = "-t";
-      argv[3] = g_strdup_printf("%i", GDK_WINDOW_XID(gtk_widget_get_window(me->_win)));
+      argv[3] = g_strdup_printf("%lu", GDK_WINDOW_XID(gtk_widget_get_window(me->_win)));
       argv[4] = NULL;
-      g_spawn_async(NULL, argv, NULL,
+      g_spawn_async(NULL, const_cast<char **>(argv), NULL,
 		    (GSpawnFlags)G_SPAWN_DO_NOT_REAP_CHILD,
 		    NULL, NULL, &pid, NULL);
       // kill the child if the window is deleted
@@ -2255,13 +2227,13 @@ void RGMainWindow::cbShowSourcesWindow(GtkWidget *self, void *data)
 			"take effect");
 #if GTK_CHECK_VERSION(2,6,0)
       gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
-					       msgstr);
+					       "%s", msgstr);
 #else
       gtk_message_dialog_set_markup(GTK_MESSAGE_DIALOG(dialog), msgstr);
 #endif
-      gtk_dialog_add_buttons(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, _("_Reload"), GTK_RESPONSE_ACCEPT, NULL);
+      gtk_dialog_add_buttons(GTK_DIALOG(dialog), _("_Cancel"), GTK_RESPONSE_REJECT, _("_Reload"), GTK_RESPONSE_ACCEPT, NULL);
       GtkWidget* reload_button = gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-      GtkWidget* refresh_image = gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_BUTTON);
+      GtkWidget* refresh_image = gtk_image_new_from_icon_name("view-refresh", GTK_ICON_SIZE_BUTTON);
       gtk_button_set_image(GTK_BUTTON(reload_button), refresh_image);
       cb = gtk_check_button_new_with_label(_("Never show this message again"));
       gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), cb, true, true, 0);
@@ -2289,12 +2261,12 @@ void RGMainWindow::cbMenuToolbarClicked(GtkWidget *self, void *data)
    assert(toolbar);
    if (me->_toolbarStyle == TOOLBAR_HIDE) {
       widget = GTK_WIDGET(gtk_builder_get_object
-                          (me->_builder, "handlebox_button_toolbar"));
+                          (me->_builder, "hbox_button_toolbar"));
       gtk_widget_hide(widget);
       return;
    } else {
       widget = GTK_WIDGET(gtk_builder_get_object
-                          (me->_builder, "handlebox_button_toolbar"));
+                          (me->_builder, "hbox_button_toolbar"));
       gtk_widget_show(widget);
    }
    gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), me->_toolbarStyle);
@@ -2556,7 +2528,7 @@ void RGMainWindow::cbPkgReconfigureClicked(GtkWidget *self, void *data)
                     me->selectedPackage()->name(),
                     NULL };
    GError *error = NULL;
-   g_spawn_async("/", (gchar**)cmd, NULL, (GSpawnFlags)0, NULL, NULL, NULL, &error);
+   g_spawn_async("/", const_cast<gchar **>(cmd), NULL, (GSpawnFlags)0, NULL, NULL, NULL, &error);
    if(error != NULL) {
       std::cerr << "failed to run dpkg-reconfigure cmd" << std::endl;
    }
@@ -2581,11 +2553,11 @@ void RGMainWindow::cbPkgHelpClicked(GtkWidget *self, void *data)
    }
 
    if (is_binary_in_path("dwww")) {
-      gchar *cmd[5];
+      const gchar *cmd[5];
       cmd[0] = "dwww";
-      cmd[1] = (gchar*)me->selectedPackage()->name();
+      cmd[1] = me->selectedPackage()->name();
       cmd[2] = NULL;
-      g_spawn_async("/tmp", cmd, NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
+      g_spawn_async("/tmp", const_cast<gchar **>(cmd), NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
    } else {
       me->_userDialog->error(_("You have to install the package \"dwww\" "
 			       "to browse the documentation of a package"));
@@ -2654,10 +2626,9 @@ void RGMainWindow::cbProceedClicked(GtkWidget *self, void *data)
 
    // nothing to do
    int listed, installed, broken;
-   int toInstall, toReInstall, toRemove;
+   int toInstall, toRemove;
    double size;
-   me->_lister->getStats(installed, broken, toInstall, toReInstall, 
-			 toRemove, size);
+   me->_lister->getStats(installed, broken, toInstall, toRemove, size);
    if((toInstall + toRemove) == 0)
       return;
 
@@ -2813,13 +2784,14 @@ gboolean RGMainWindow::xapianDoSearch(void *data)
 {
    RGMainWindow *me = (RGMainWindow *) data;
    const gchar *str = gtk_entry_get_text(GTK_ENTRY(me->_entry_fast_search));
+   GtkStyleContext *styleContext = gtk_widget_get_style_context(me->_entry_fast_search);
 
    me->_fastSearchEventID = -1;
    me->setBusyCursor(true);
    RGFlushInterface();
    if(str == NULL || strlen(str) <= 1) {
       // reset the color
-      gtk_widget_modify_base(me->_entry_fast_search, GTK_STATE_NORMAL, NULL);
+      gtk_style_context_remove_provider(styleContext, GTK_STYLE_PROVIDER(_fastSearchCssProvider));
       // if the user has cleared the search, refresh the view
       // Gtk-CRITICAL **: gtk_tree_view_unref_tree_helper: assertion `node != NULL' failed
       // at us, see LP: #38397 for more information
@@ -2836,8 +2808,8 @@ gboolean RGMainWindow::xapianDoSearch(void *data)
       me->refreshTable();
       // set color to a light yellow to make it more obvious that a search
       // is performed
-      GdkColor yellowish = {0, 63479,63479,48830};
-      gtk_widget_modify_base(me->_entry_fast_search, GTK_STATE_NORMAL, &yellowish);
+      gtk_style_context_add_provider(styleContext, GTK_STYLE_PROVIDER(_fastSearchCssProvider),
+                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
    }
    me->setBusyCursor(false);
 
@@ -3147,14 +3119,6 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
             gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
             oneclickitem = item->data;
          }
-
-         GtkWidget *img;
-         if (!(flags & RPackage::FInstalled))
-            img = get_gtk_image("package-available");
-         else
-            img = get_gtk_image("package-installed-updated");
-         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item->data), img);
-         gtk_widget_show(img);
       }
 
       // Install button
@@ -3172,8 +3136,16 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
          gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
+      // Upgrade button
+      if (i == 3 && (flags & RPackage::FOutdated)
+          && !(flags & RPackage::FInstall)) {
+         gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
+         if (oneclickitem == NULL)
+            oneclickitem = item->data;
+      }
+
       // remove
-      if (i == 3 &&  (flags & RPackage::FInstalled) 
+      if (i == 4 &&  (flags & RPackage::FInstalled) 
 	  && (!(flags & RPackage::FRemove) || (flags & RPackage::FPurge)) ) {
             gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
             if (oneclickitem == NULL)
@@ -3181,28 +3153,28 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
       }
 
       // Purge
-      if (i == 4 
+      if (i == 5 
 	  && (flags&RPackage::FInstalled || flags&RPackage::FResidualConfig) 
 	  && !(flags & RPackage::FPurge) ) {
 	 gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
-      // Separator is i==5 (hide on left click)
-      if(i == 5 && event->button == 1)
+      // Seperator is i==6 (hide on left click)
+      if(i == 6 && event->button == 1)
 	 gtk_widget_hide(GTK_WIDGET(item->data));
-      // Properties is i==6 (available if only one pkg is selected)
-      if (i == 6) {
+      // Properties is i==7 (available if only one pkg is selected)
+      if (i == 7) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1)
 	    gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
-      // i==7 is separator, hide on left click
-      if(i == 7 && event->button == 1)
+      // i==8 is sperator, hide on left click
+      if(i == 8 && event->button == 1)
 	 gtk_widget_hide(GTK_WIDGET(item->data));
       // recommends
-      if(i == 8) {
+      if(i == 9) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1) {
@@ -3215,7 +3187,7 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
 	       gtk_widget_set_sensitive(GTK_WIDGET(item->data), FALSE);	    
 	 }
       }
-      if(i == 9) {
+      if(i == 10) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1) {
@@ -3387,11 +3359,10 @@ void RGMainWindow::cbGenerateDownloadScriptClicked(GtkWidget *self, void *data)
    //cout << "cbGenerateDownloadScriptClicked()" << endl;
    RGMainWindow *me = (RGMainWindow *) data;
 
-   int installed, broken, toInstall, toReInstall, toRemove;
+   int installed, broken, toInstall, toRemove;
    double sizeChange;
-   me->_lister->getStats(installed, broken, toInstall, toReInstall,
-			 toRemove, sizeChange);
-   if(toInstall+toReInstall == 0) {
+   me->_lister->getStats(installed, broken, toInstall, toRemove, sizeChange);
+   if(toInstall== 0) {
       me->_userDialog->message("Nothing to install/upgrade\n\n"
 			       "Please select the \"Mark all Upgrades\" "
 			       "button or some packages to install/upgrade.");
@@ -3406,8 +3377,8 @@ void RGMainWindow::cbGenerateDownloadScriptClicked(GtkWidget *self, void *data)
    filesel = gtk_file_chooser_dialog_new(_("Save script"), 
 					 GTK_WINDOW(me->window()),
 					 GTK_FILE_CHOOSER_ACTION_SAVE,
-					 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+					 _("_Cancel"), GTK_RESPONSE_CANCEL,
+					 _("_Save"), GTK_RESPONSE_ACCEPT,
 					 NULL);
    int res = gtk_dialog_run(GTK_DIALOG(filesel));
    const char *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filesel));
@@ -3433,8 +3404,8 @@ void RGMainWindow::cbAddDownloadedFilesClicked(GtkWidget *self, void *data)
    filesel = gtk_file_chooser_dialog_new(_("Select directory"), 
 					 GTK_WINDOW(me->window()),
 					 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-					 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					 _("_Cancel"), GTK_RESPONSE_CANCEL,
+					 _("_Open"), GTK_RESPONSE_ACCEPT,
 					 NULL);
    int res = gtk_dialog_run(GTK_DIALOG(filesel));
    const char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filesel));

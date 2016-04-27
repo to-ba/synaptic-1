@@ -1,28 +1,118 @@
-synaptic (0.81.2-4) qiana; urgency=medium
+synaptic (0.83) unstable; urgency=medium
 
-  * Fixed authentication dialog in proxy settings
-  * Improved Croatian translations
+  [ xuzhen ]
+  * drop the deprecated GtkHandleBox
+  * port from deprecated GtkHPaned/GtkVPaned to GtkPaned
+  * port from deprecated GtkHButtonBox/GtkVButtonBox to GtkButtonBox
+  * port from deprecated GtkHSeparator to GtkSeparator
+  * drop the deprecated gtk_widget_modify_bg() & gtk_widget_get_style()
+  * get rid of the deprecated gtk_widget_modify_font()
+  * fix warnings: deprecated conversion from string constant to char*
+  * fix warnings: format not a string literal and no format arguments
+  * get rid of the deprecated gtk_widget_modify_base()
+  * port from deprecated GtkImageMenuItem to GtkMenuItem
+  * fix Xwindow id data type
+  * get rid of the deprecated GtkStock in GtkBuilder UI definitions
+  * fix warning: too many arguments for format
+  * remove an unused parameter
+  * fix attribute name for GdkRGBA
+  * fix toolbar wrapper box name
+  * requires gtk3 explicitly
+  * fix toolbar style bug
 
- -- Clement Lefebvre <root@linuxmint.com>  Tue, 22 Jul 2014 11:35:20 +0200
+ -- Michael Vogt <mvo@debian.org>  Mon, 11 Jan 2016 10:20:03 +0100
 
-synaptic (0.81.2-3) qiana; urgency=medium
+synaptic (0.82.5) unstable; urgency=medium
 
-  * Fixed greyed-out items in context menu
+  [ xuzhen ]
+  * port from deprecated GdkColor to GdkRGBA
+  * port from deprecated GtkFontSelectionDialog to GtkFontChooserDialog
+  * get rid of the deprecated gtk_tree_view_set_rules_hint()
+  * port from deprecated gdk_cursor_new() to gdk_cursor_new_for_display()
+  * port from deprecated GtkHBox/GtkVBox to GtkBox
+  * port from deprecated gtk_vscrollbar_new() to gtk_scrollbar_new()
+  * get rid of the deprecated GtkStock
 
- -- Clement Lefebvre <root@linuxmint.com>  Thu, 19 Jun 2014 00:51:53 +0100
+ -- Michael Vogt <mvo@debian.org>  Sun, 13 Dec 2015 10:46:17 +0100
 
-synaptic (0.81.2-2) qiana; urgency=medium
+synaptic (0.82.4) unstable; urgency=medium
 
-  * Removed the ability to upgrade packages (Synaptic isn't aware of safety levels and that's required for UI, but more importantly the selection of packages is buggy, the first CTRL+A for instance calls the resolver as if each package was to be upgraded individually as opposed to calling the upgrade on the selection as a whole. In the case of some updates, such as the recent mesa updates, this leads to the removal of clutter, and therefore totem and even Cinnamon.).
-  * Removed left-over menu item in Package menu
+  * add missing -lX11
 
- -- Clement Lefebvre <root@linuxmint.com>  Sun, 08 Jun 2014 12:04:34 +0100
+ -- Michael Vogt <mvo@debian.org>  Mon, 07 Dec 2015 15:19:57 +0100
 
-synaptic (0.81.2-1) qiana; urgency=medium
+synaptic (0.82.3) unstable; urgency=medium
 
-  * Removed the ability to upgrade packages (Synaptic isn't aware of safety levels and that's required for UI, but more importantly the selection of packages is buggy, the first CTRL+A for instance calls the resolver as if each package was to be upgraded individually as opposed to calling the upgrade on the selection as a whole. In the case of some updates, such as the recent mesa updates, this leads to the removal of clutter, and therefore totem and even Cinnamon.).
+  * fix missing updated build-depends against libvte-2.91, thanks
+    to Emilio Pozuelo Monfort
 
- -- Clement Lefebvre <clement.lefebvre@linuxmint.com>  Sat, 07 Jun 2014 15:16:06 +0100
+ -- Michael Vogt <mvo@debian.org>  Mon, 07 Dec 2015 11:31:47 +0100
+
+synaptic (0.82.1) unstable; urgency=medium
+
+  [ Michael Vogt ]
+  * Updated fr.po translation.
+    Thanks to Olivier Humbert (Closes: #804870)
+  * Port to vte 2.91.
+    Thanks to Egmont Koblinger (Closes: 788026)
+
+  [ xuzhen ]
+  * Fix empty history window (Closes: #798884)
+
+ -- Michael Vogt <mvo@debian.org>  Fri, 04 Dec 2015 23:03:43 +0100
+
+synaptic (0.82) unstable; urgency=medium
+
+  [ Michael Vogt ]
+  * Add xdg-utils to the recommends (Closes: #791375)
+  * Fix bulding with apt from experimental
+  * Fix missing _parentWindow setup in RGUserDialog::RGUserDialog(parent*)
+  * Set all dialog_*.ui to "visible=False" so that
+    gtk_window_set_transient_for() works
+  * Set all window_*.ui top-level windows to "visible=False" s that
+    gtk_window_set_transient_for() works
+
+  [ HumanG33k ]
+  * Upgrade deprecated gtk elements in:
+    dialog_auth[...].ui, dialog_changelog.ui,
+    dialog_change_version, dialog_columns.ui,
+    dialog_conffile.ui, dialog_disc_label.ui,
+    dialog_download_error.ui,  dialog_example.ui,
+    dialog_new_repositroy.ui, dialog_quit.ui,
+    dialog_task_descr.ui, dialog_unmet.ui,
+    dialog_update_failed.ui, dialog_update_outdated.ui,
+    dialog_upgrade.ui, dialog_welcome.ui
+
+ -- Michael Vogt <mvo@debian.org>  Thu, 15 Oct 2015 20:58:42 +0200
+
+synaptic (0.81.4) unstable; urgency=medium
+
+  [ Michael Vogt ]
+  * gtk/gtkbuilder/window_setopt.ui, gtk/gtkbuilder/dialog_download_error.ui:
+    - fix crash in internal dialog because gtk decided to not load the file
+      when it encounters the previously valid property "has_separator"
+      (closes: #774056)
+  * move code to git
+
+  [ Gianni Lerro ]
+  * Add to "Quick filter" text entry a button to clean it (Closes: #791749)
+
+ -- Michael Vogt <mvo@debian.org>  Sat, 11 Jul 2015 12:01:12 +0200
+
+synaptic (0.81.3) unstable; urgency=low
+
+  [ Alex Henrie ]
+  * lp:~alexhenrie24/synaptic/synaptic:
+     - fix expand in the properties window
+  
+  [ Gabor Kelemen ]
+  * lp:~kelemeng/synaptic/bug1327956:
+    - fix proxy auth config (LP: #1327956)
+
+  [ lp:~rohangarg/synaptic/bug1375786 ]
+  - use the synaptic-pkexec in kde as well (LP: #1375786)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Mon, 19 Jan 2015 14:35:21 +0100
 
 synaptic (0.81.2) unstable; urgency=low
 

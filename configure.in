@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(configure.in)
 
-AM_INIT_AUTOMAKE(synaptic, 0.81.2)
+AM_INIT_AUTOMAKE(synaptic, 0.83)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
@@ -47,7 +47,7 @@ dnl AC_SUBST(BUILD_wings)
 
 dnl we build for gtk3 by default now
 pkg_modules="gtk+-3.0 >= 2.91.0, pango >= 1.0.0, glib-2.0"
-vte_modules="vte-2.90"
+vte_modules="vte-2.91"
 
 PKG_CHECK_MODULES(GTK, [$pkg_modules])
 BUILD_gtk="gtk"	

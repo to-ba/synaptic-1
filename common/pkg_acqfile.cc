@@ -42,12 +42,18 @@
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/indexfile.h>
 
-// Let's all sing a song about apt-pkg's brokenness..
+#if APT_PKG_MAJOR < 5
 
-pkgAcqFileSane::pkgAcqFileSane(pkgAcquire *Owner, std::string URI,
-			       std::string Description, std::string ShortDesc,
-			       std::string filename):
-  Item(Owner)
+// Let's all sing a song about apt-pkg's brokenness..
+pkgAcqFileSane::pkgAcqFileSane(pkgAcquire *Owner,
+                               std::string URI,
+                               HashStringList const &hsl,
+                               unsigned long long const Size,
+                               std::string Description,
+                               std::string ShortDesc,
+                               std::string const &DestDir,
+                               std::string const &filename)
+ : Item(Owner)
 {
   Retries=_config->FindI("Acquire::Retries",0);
   DestFile=filename;
@@ -79,75 +85,4 @@ void pkgAcqFileSane::Failed(std::string Message,pkgAcquire::MethodConfig *Cnf)
   Item::Failed(Message,Cnf);
 }
 
-// Mostly copied from pkgAcqArchive.
-bool get_archive(pkgAcquire *Owner, pkgSourceList *Sources,
-		 pkgRecords *Recs, pkgCache::VerIterator const &Version,
-		 std::string directory, std::string &StoreFilename)
-{
-  pkgCache::VerFileIterator Vf=Version.FileList();
-
-  if(Version.Arch()==0)
-    return _error->Error(_("I wasn't able to locate a file for the %s package. "
-			   "This might mean you need to manually fix this package. (due to missing arch)"),
-			 Version.ParentPkg().Name());
-
-  /* We need to find a filename to determine the extension. We make the
-     assumption here that all the available sources for this version share
-     the same extension.. */
-  // Skip not source sources, they do not have file fields.
-  for (; Vf.end() == false; Vf++)
-    {
-      if ((Vf.File()->Flags & pkgCache::Flag::NotSource) != 0)
-	continue;
-      break;
-    }
-
-  // Does not really matter here.. we are going to fail out below
-  if (Vf.end() != true)
-    {     
-      // If this fails to get a file name we will bomb out below.
-      pkgRecords::Parser &Parse = Recs->Lookup(Vf);
-      if (_error->PendingError() == true)
-	return false;
-            
-      // Generate the final file name as: package_version_arch.foo
-      StoreFilename = QuoteString(Version.ParentPkg().Name(),"_:") + '_' +
-	QuoteString(Version.VerStr(),"_:") + '_' +
-	QuoteString(Version.Arch(),"_:.") + 
-	"." + flExtension(Parse.FileName());
-    }
-
-   for (; Vf.end() == false; Vf++)
-   {
-      // Ignore not source sources
-      if ((Vf.File()->Flags & pkgCache::Flag::NotSource) != 0)
-         continue;
-
-      // Try to cross match against the source list
-      pkgIndexFile *Index;
-      if (Sources->FindIndex(Vf.File(),Index) == false)
-            continue;
-      
-      // Grab the text package record
-      pkgRecords::Parser &Parse = Recs->Lookup(Vf);
-      if (_error->PendingError() == true)
-         return false;
-
-      std::string PkgFile = Parse.FileName();
-      if (PkgFile.empty() == true)
-         return _error->Error(_("The package index files are corrupted. No Filename: "
-                              "field for package %s."),
-                              Version.ParentPkg().Name());
-
-      std::string DestFile = directory + "/" + flNotDir(StoreFilename);
-
-      // Create the item
-      new pkgAcqFileSane(Owner, Index->ArchiveURI(PkgFile),
-			 Index->ArchiveInfo(Version),
-			 Version.ParentPkg().Name(), DestFile);
-
-      Vf++;
-      return true;
-   }
-   return false;
-}
+#endif

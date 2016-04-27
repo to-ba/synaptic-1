@@ -141,7 +141,7 @@ void RGPkgDetailsWindow::doShowBigScreenshot(RPackage *pkg)
    GtkWidget *img = gtk_image_new_from_file(filename.c_str());
    GtkWidget *win = gtk_dialog_new();
    gtk_window_set_default_size(GTK_WINDOW(win), 500, 400);
-   gtk_dialog_add_button(GTK_DIALOG(win), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+   gtk_dialog_add_button(GTK_DIALOG(win), _("_Close"), GTK_RESPONSE_CLOSE);
    gtk_widget_show(img);
    GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (win));
    gtk_container_add(GTK_CONTAINER(content_area), img);
@@ -293,9 +293,6 @@ void RGPkgDetailsWindow::fillInValues(RGGtkBuilderWindow *me,
       gtk_image_set_pixel_size(GTK_IMAGE(emblem), 16);
       // set eventbox and tooltip
       GtkWidget *event = gtk_event_box_new();
-      GtkStyle *style = gtk_widget_get_style(textview);
-      gtk_widget_modify_bg(event, GTK_STATE_NORMAL, 
-			   &style->base[GTK_STATE_NORMAL]);
       gtk_container_add(GTK_CONTAINER(event), emblem);
       gtk_widget_set_tooltip_text(event, _("This application is supported by the distribution"));
       // create anchor

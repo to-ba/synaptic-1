@@ -141,7 +141,7 @@ RGRepositoryEditor::RGRepositoryEditor(RGWindow *parent)
                                           G_TYPE_STRING,
                                           G_TYPE_STRING,
                                           G_TYPE_STRING,
-                                          G_TYPE_POINTER, GDK_TYPE_COLOR);
+                                          G_TYPE_POINTER, GDK_TYPE_RGBA);
 
    _sourcesListView = GTK_WIDGET(gtk_builder_get_object(_builder, "treeview_repositories"));
    gtk_tree_view_set_model(GTK_TREE_VIEW(_sourcesListView),
@@ -166,7 +166,7 @@ RGRepositoryEditor::RGRepositoryEditor(RGWindow *parent)
    column = gtk_tree_view_column_new_with_attributes(_("Type"),
                                                      renderer,
                                                      "text", TYPE_COLUMN,
-                                                     "foreground-gdk",
+                                                     "foreground-rgba",
                                                      DISABLED_COLOR_COLUMN,
                                                      NULL);
    gtk_tree_view_append_column(GTK_TREE_VIEW(_sourcesListView), column);
@@ -176,7 +176,7 @@ RGRepositoryEditor::RGRepositoryEditor(RGWindow *parent)
    column = gtk_tree_view_column_new_with_attributes(_("Vendor"),
                                                      renderer,
                                                      "text", VENDOR_COLUMN,
-                                                     "foreground-gdk",
+                                                     "foreground-rgba",
                                                      DISABLED_COLOR_COLUMN,
                                                      NULL);
    gtk_tree_view_append_column(GTK_TREE_VIEW(_sourcesListView), column);
@@ -189,7 +189,7 @@ RGRepositoryEditor::RGRepositoryEditor(RGWindow *parent)
    column = gtk_tree_view_column_new_with_attributes(_("URI"),
                                                      renderer,
                                                      "text", URI_COLUMN,
-                                                     "foreground-gdk",
+                                                     "foreground-rgba",
                                                      DISABLED_COLOR_COLUMN,
                                                      NULL);
    gtk_tree_view_append_column(GTK_TREE_VIEW(_sourcesListView), column);
@@ -200,7 +200,7 @@ RGRepositoryEditor::RGRepositoryEditor(RGWindow *parent)
                                                      renderer,
                                                      "text",
                                                      DISTRIBUTION_COLUMN,
-                                                     "foreground-gdk",
+                                                     "foreground-rgba",
                                                      DISABLED_COLOR_COLUMN,
                                                      NULL);
    gtk_tree_view_append_column(GTK_TREE_VIEW(_sourcesListView), column);
@@ -210,7 +210,7 @@ RGRepositoryEditor::RGRepositoryEditor(RGWindow *parent)
    column = gtk_tree_view_column_new_with_attributes(_("Section(s)"),
                                                      renderer,
                                                      "text", SECTIONS_COLUMN,
-                                                     "foreground-gdk",
+                                                     "foreground-rgba",
                                                      DISABLED_COLOR_COLUMN,
                                                      NULL);
    gtk_tree_view_append_column(GTK_TREE_VIEW(_sourcesListView), column);
