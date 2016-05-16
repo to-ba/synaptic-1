@@ -96,30 +96,6 @@ void RGPreferencesWindow::cbArchiveSelection(GtkWidget *self, void *data)
    }
 }
 
-void RGPreferencesWindow::cbRadioDistributionChanged(GtkWidget *self, 
-						     void *data)
-{
-   //cout << "void RGPreferencesWindow::cbRadioDistributionChanged()" << endl;
-   RGPreferencesWindow *me = (RGPreferencesWindow *) data;
-   
-   // we are only interested in the active one
-   if(me->_blockAction || !gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self))) 
-      return;
-   
-   gchar *defaultDistro = (gchar*)g_object_get_data(G_OBJECT(self),"defaultDistro");
-   if(strcmp(defaultDistro, "distro") == 0) {
-      gtk_widget_set_sensitive(GTK_WIDGET(me->_comboDefaultDistro),TRUE);
-      gchar *s = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(me->_comboDefaultDistro));
-      if(s!=NULL)
-	 me->_defaultDistro = s;
-   } else {
-      gtk_widget_set_sensitive(GTK_WIDGET(me->_comboDefaultDistro),FALSE);
-      me->_defaultDistro = defaultDistro;
-   }
-   //cout << "new default distro: " << me->_defaultDistro << endl;
-   me->distroChanged = true;
-}
-
 void RGPreferencesWindow::applyProxySettings()
 {
    string http, ftp, noProxy;
@@ -377,16 +353,6 @@ void RGPreferencesWindow::saveNetwork()
    applyProxySettings();
 }
  
-void RGPreferencesWindow::saveDistribution()
-{
-   if (_defaultDistro.empty()) {
-      _config->Clear("APT::Default-Release");
-      _config->Clear("Synaptic::DefaultDistro");
-   } else {
-      _config->Set("APT::Default-Release", _defaultDistro);
-      _config->Set("Synaptic::DefaultDistro", _defaultDistro);
-   }
-}
 
 
 void RGPreferencesWindow::saveAction(GtkWidget *self, void *data)
@@ -398,7 +364,6 @@ void RGPreferencesWindow::saveAction(GtkWidget *self, void *data)
    me->saveColors();
    me->saveFiles();
    me->saveNetwork();
-   me->saveDistribution();
 
    if (!RWriteConfigFile(*_config)) {
       _error->Error(_("An error occurred while saving configurations."));
@@ -680,88 +645,6 @@ void RGPreferencesWindow::readNetwork()
 
 }
 
-void RGPreferencesWindow::readDistribution()
-{
-   // distro selection, block actions here because the combobox changes
-   // and a signal is emited
-   _blockAction = true;
-
-   int distroMatch = 0;
-   string defaultDistro = _config->Find("Synaptic::DefaultDistro", "");
-   vector<string> archives = _lister->getPolicyArchives();
-  
-   // setup the toggle buttons
-   GtkWidget *button, *ignore,*now,*distro;
-   ignore = GTK_WIDGET(gtk_builder_get_object(_builder, "radiobutton_ignore"));
-   g_object_set_data(G_OBJECT(ignore),"defaultDistro",(void*)"");
-   g_signal_connect(G_OBJECT(ignore),
-                    "toggled",
-                    G_CALLBACK(cbRadioDistributionChanged), this);
-   now = GTK_WIDGET(gtk_builder_get_object(_builder, "radiobutton_now"));
-   g_object_set_data(G_OBJECT(now),"defaultDistro",(void*)"now");
-   g_signal_connect(G_OBJECT(now),
-                    "toggled",
-                    G_CALLBACK(cbRadioDistributionChanged), this);
-   distro = GTK_WIDGET(gtk_builder_get_object(_builder, "radiobutton_distro"));
-   g_object_set_data(G_OBJECT(distro),"defaultDistro",(void*)"distro");
-   g_signal_connect(G_OBJECT(distro),
-                    "toggled",
-                    G_CALLBACK(cbRadioDistributionChanged), this);
-
-   // clear the combo box
-   GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(_comboDefaultDistro));
-   int num = gtk_tree_model_iter_n_children(model, NULL);
-   for(;num >= 0;num--)
-      gtk_combo_box_text_remove(GTK_COMBO_BOX_TEXT(_comboDefaultDistro), num);
-
-   if(defaultDistro == "") {
-      button = ignore;
-      gtk_widget_set_sensitive(GTK_WIDGET(_comboDefaultDistro),FALSE);
-   } else if(defaultDistro == "now") {
-      button = now;
-      gtk_widget_set_sensitive(GTK_WIDGET(_comboDefaultDistro),FALSE);
-   } else {
-      button = distro;
-      gtk_widget_set_sensitive(GTK_WIDGET(_comboDefaultDistro),TRUE);
-   }
-   assert(button);
-   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-
-
-   // set up combo-box
-   g_signal_connect(G_OBJECT(_comboDefaultDistro), "changed",
-		    G_CALLBACK(cbArchiveSelection), this);
-
-   g_signal_connect(gtk_builder_get_object(_builder, "entry_http_proxy"),
-				 "changed",
-				 G_CALLBACK(cbHttpProxyEntryChanged), this);
-
-   GtkTreeIter distroIter;
-   GtkListStore *distroStore
-      = GTK_LIST_STORE(gtk_combo_box_get_model(GTK_COMBO_BOX(_comboDefaultDistro)));
-   for (unsigned int i = 0; i < archives.size(); i++) {
-      // ignore "now", it's a toggle button item now
-      if(archives[i] == "now")
-	 continue;
-      gtk_list_store_append(distroStore, &distroIter);
-      gtk_list_store_set(distroStore, &distroIter, 0, archives[i].c_str(), -1);
-      if (defaultDistro == archives[i]) {
-         //cout << "match for: " << archives[i] << " (" << i << ")" << endl;
-	 // we ignored the "now" archive, so we have to subtract by one
-         distroMatch=i-1;
-      }
-   }
-   GtkCellRenderer *crt;
-   crt = gtk_cell_renderer_text_new();
-   gtk_cell_layout_clear(GTK_CELL_LAYOUT(_comboDefaultDistro));
-   gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(_comboDefaultDistro), crt, TRUE);
-   gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(_comboDefaultDistro),
-                                 crt, "text", 0);
-   gtk_combo_box_set_active(GTK_COMBO_BOX(_comboDefaultDistro), distroMatch);
-
-   _blockAction = false;
-}
-
 void RGPreferencesWindow::show()
 {
    readGeneral();
@@ -769,7 +652,6 @@ void RGPreferencesWindow::show()
    readColors();
    readFiles();
    readNetwork();
-   readDistribution();
 
    RGWindow::show();
 }
@@ -1097,30 +979,6 @@ RGPreferencesWindow::RGPreferencesWindow(RGWindow *win,
                                           crt, "text", 0);
    gtk_combo_box_set_active(GTK_COMBO_BOX(_comboUpgradeMethod), 0);
    assert(_comboUpgradeMethod);
-
-   _comboDefaultDistro =
-      GTK_WIDGET(gtk_builder_get_object(_builder, "combobox_default_distro"));
-   assert(_comboDefaultDistro);
-   gtk_widget_set_tooltip_text(GTK_WIDGET(gtk_builder_get_object
-                                   (_builder, "radiobutton_distro")),
-		       _("Prefer package versions from the selected "
-		       "distribution when upgrading packages. If you "
-		       "manually force a version from a different "
-		       "distribution, the package version will follow "
-		       "that distribution until it enters the default "
-		       "distribution."));
-   gtk_widget_set_tooltip_text(GTK_WIDGET(gtk_builder_get_object	
-                                   (_builder, "radiobutton_now")),
-		       _("Never upgrade to a new version automatically. "
-			    "Be _very_ careful with this option as you will "
-			    "not get security updates automatically! "
-		       "If you manually force a version "
-		       "the package version will follow "
-		       "the chosen distribution."));
-   gtk_widget_set_tooltip_text(GTK_WIDGET(gtk_builder_get_object
-                                   (_builder,"radiobutton_ignore")),
-			_("Let synaptic pick the best version for you. "
-			"If unsure use this option. "));
 
 
    // hide the "remove with configuration" from rpm users

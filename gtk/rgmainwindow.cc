@@ -1014,18 +1014,11 @@ void RGMainWindow::buildInterface()
    _upgradeB = GTK_WIDGET(gtk_builder_get_object(_builder, "button_upgrade"));
    gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(_upgradeB), "system-upgrade");
    _upgradeM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_upgrade_all"));
-   g_signal_connect(G_OBJECT(_upgradeB),
-                    "clicked",
-                    G_CALLBACK(cbUpgradeClicked), this);
-   g_signal_connect(G_OBJECT(_upgradeM),
-                    "activate",
-                    G_CALLBACK(cbUpgradeClicked), this);
 
-   if (_config->FindB("Synaptic::NoUpgradeButtons", false) == true) {
-      gtk_widget_hide(_upgradeB);
-      widget = GTK_WIDGET(gtk_builder_get_object(_builder, "alignment_upgrade"));
-      gtk_widget_hide(widget);
-   }
+   gtk_widget_hide(_upgradeB);
+   gtk_widget_hide(_upgradeM);
+   widget = GTK_WIDGET(gtk_builder_get_object(_builder, "alignment_upgrade"));
+   gtk_widget_hide(widget);
 
    _proceedB = GTK_WIDGET(gtk_builder_get_object(_builder, "button_procceed"));
    _proceedM = GTK_WIDGET(gtk_builder_get_object(_builder, "menu_proceed"));
@@ -1146,6 +1139,7 @@ void RGMainWindow::buildInterface()
                                       (_builder, "menu_upgrade"));
    assert(_pkgupgradeM);
    g_object_set_data(G_OBJECT(widget), "me", this);
+   gtk_widget_hide(_pkgupgradeM);
 
    widget = _removeM = GTK_WIDGET(gtk_builder_get_object
                                   (_builder, "menu_remove"));
@@ -1421,13 +1415,6 @@ void RGMainWindow::buildInterface()
    g_object_set_data(G_OBJECT(menuitem),"me",this);
    g_signal_connect(menuitem, "activate",
 		    (GCallback) cbPkgAction, (void*)PKG_REINSTALL);
-   gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
-
-
-   menuitem = gtk_menu_item_new_with_label(_("Mark for Upgrade"));
-   g_object_set_data(G_OBJECT(menuitem), "me", this);
-   g_signal_connect(menuitem, "activate",
-                    (GCallback) cbPkgAction, (void *)PKG_INSTALL);
    gtk_menu_shell_append(GTK_MENU_SHELL(_popupMenu), menuitem);
 
    menuitem = gtk_menu_item_new_with_label(_("Mark for Removal"));
@@ -3136,16 +3123,8 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
          gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
-      // Upgrade button
-      if (i == 3 && (flags & RPackage::FOutdated)
-          && !(flags & RPackage::FInstall)) {
-         gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
-         if (oneclickitem == NULL)
-            oneclickitem = item->data;
-      }
-
       // remove
-      if (i == 4 &&  (flags & RPackage::FInstalled) 
+      if (i == 3 &&  (flags & RPackage::FInstalled) 
 	  && (!(flags & RPackage::FRemove) || (flags & RPackage::FPurge)) ) {
             gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
             if (oneclickitem == NULL)
@@ -3153,28 +3132,28 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
       }
 
       // Purge
-      if (i == 5 
+      if (i == 4 
 	  && (flags&RPackage::FInstalled || flags&RPackage::FResidualConfig) 
 	  && !(flags & RPackage::FPurge) ) {
 	 gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
-      // Seperator is i==6 (hide on left click)
-      if(i == 6 && event->button == 1)
+      // Seperator is i==5 (hide on left click)
+      if(i == 5 && event->button == 1)
 	 gtk_widget_hide(GTK_WIDGET(item->data));
-      // Properties is i==7 (available if only one pkg is selected)
-      if (i == 7) {
+      // Properties is i==6 (available if only one pkg is selected)
+      if (i == 6) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1)
 	    gtk_widget_set_sensitive(GTK_WIDGET(item->data), TRUE);
       }
 
-      // i==8 is sperator, hide on left click
-      if(i == 8 && event->button == 1)
+      // i==7 is sperator, hide on left click
+      if(i == 7 && event->button == 1)
 	 gtk_widget_hide(GTK_WIDGET(item->data));
       // recommends
-      if(i == 9) {
+      if(i == 8) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1) {
@@ -3187,7 +3166,7 @@ void RGMainWindow::cbTreeviewPopupMenu(GtkWidget *treeview,
 	       gtk_widget_set_sensitive(GTK_WIDGET(item->data), FALSE);	    
 	 }
       }
-      if(i == 10) {
+      if(i == 9) {
 	 if(event->button == 1)
 	    gtk_widget_hide(GTK_WIDGET(item->data));
 	 else if(selected_pkgs.size() == 1) {
