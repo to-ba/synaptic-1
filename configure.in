@@ -230,6 +230,7 @@ po/Makefile.in
 help/Makefile
 help/C/Makefile
 help/es/Makefile
+help/hr/Makefile 
 help/sv/Makefile
 doc/Makefile
 doc/html/Makefile
