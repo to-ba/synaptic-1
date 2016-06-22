@@ -1120,7 +1120,6 @@ msgid "-i=? Start with the initial Filter with given name\n"
 msgstr "-i=? Mit anfänglichem Filter des angegebenen Namens starten\n"
 
 #: ../gtk/gsynaptic.cc:79
-#, fuzzy
 msgid "-o=? Set an arbitrary configuration option, eg -o dir::cache=/tmp\n"
 msgstr "-o=? Eine Konfigurationsoption setzen, z.B. -o dir::cache=/tmp\n"
 
@@ -1192,12 +1191,10 @@ msgstr ""
 "oder aptitude) läuft. Bitte beenden Sie diese Applikation zunächst."
 
 #: ../gtk/gsynaptic.cc:430
-#, fuzzy
 msgid "Starting \"Synaptic Package Manager\" without administrative privileges"
 msgstr "Ohne Administrationsrechte starten"
 
 #: ../gtk/gsynaptic.cc:432
-#, fuzzy
 msgid ""
 "You will not be able to apply any changes, but you can still export the "
 "marked changes or create a download script for them."
@@ -1634,7 +1631,7 @@ msgstr ""
 #: ../gtk/gtkbuilder/window_logview.ui.h:2
 #: ../gtk/gtkbuilder/dialog_task_descr.ui.h:1
 msgid "_Close"
-msgstr ""
+msgstr "Schließen"
 
 #: ../gtk/rgpkgdetails.cc:220
 #, c-format
@@ -1789,7 +1786,7 @@ msgid "Mark Suggested for Installation"
 msgstr "Vorschläge zum Installieren vormerken"
 
 #: ../gtk/rgmainwindow.cc:1629
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Removing package \"%s\" may render the system unusable.\n"
 "Are you sure you want to do that?"
@@ -1870,7 +1867,6 @@ msgstr "Änderungen öffnen"
 #: ../gtk/gtkbuilder/dialog_authentication.ui.h:2
 #: ../gtk/gtkbuilder/dialog_disc_label.ui.h:1
 #: ../gtk/gtkbuilder/dialog_new_repositroy.ui.h:6
-#, fuzzy
 msgid "_Cancel"
 msgstr "Abbrechen"
 
@@ -1929,7 +1925,6 @@ msgid "Starting help viewer..."
 msgstr "Hilfe wird gestartet …"
 
 #: ../gtk/rgmainwindow.cc:2364
-#, fuzzy
 msgid ""
 "No help viewer is installed!\n"
 "\n"
@@ -2466,7 +2461,6 @@ msgid "_Settings"
 msgstr "_Einstellungen"
 
 #: ../gtk/gtkbuilder/window_main.ui.h:38
-#, fuzzy
 msgid "_Preferences"
 msgstr "Einstellungen"
 
@@ -2776,7 +2770,6 @@ msgid "Look in:"
 msgstr "Durchsuchen:"
 
 #: ../gtk/gtkbuilder/window_fetch.ui.h:1
-#, fuzzy
 msgid "Show individual files"
 msgstr "Einzelne Dateien anzeigen"
 
@@ -3100,7 +3093,6 @@ msgstr "Version bevorzugen von: "
 #: ../gtk/gtkbuilder/window_preferences.ui.h:75
 #: ../gtk/gtkbuilder/window_setopt.ui.h:2
 #: ../gtk/gtkbuilder/window_summary.ui.h:3
-#, fuzzy
 msgid "_Apply"
 msgstr "Anwenden"
 
@@ -3110,7 +3102,6 @@ msgstr "Anwenden"
 #: ../gtk/gtkbuilder/window_repositories.ui.h:11
 #: ../gtk/gtkbuilder/window_tasks.ui.h:6
 #: ../gtk/gtkbuilder/dialog_authentication.ui.h:3
-#, fuzzy
 msgid "_OK"
 msgstr "OK"
 
@@ -3307,7 +3298,6 @@ msgid "Automatic install"
 msgstr "Automatische Installation"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:41
-#, fuzzy
 msgid "Packages installed automatically as part of a dependency"
 msgstr "Automatisch installiert als Teil einer Abhängigkeit"
 
@@ -3316,7 +3306,6 @@ msgid "Automatic removable"
 msgstr "Automatisch entfernbar"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:43
-#, fuzzy
 msgid ""
 "Packages installed automatically but no longer required by any other package"
 msgstr ""
@@ -3335,7 +3324,6 @@ msgid "Manual installed"
 msgstr "Manuell installiert"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:47
-#, fuzzy
 msgid "Packages installed manually (not as a dependency of something else)"
 msgstr "Manuell installiert (nicht als eine Abhängigkeit von etwas anderem)"
 
@@ -3609,7 +3597,6 @@ msgstr ""
 "Chronik der installierten, aktualisierten und entfernten Software-Pakete"
 
 #: ../gtk/gtkbuilder/window_logview.ui.h:4
-#, fuzzy
 msgid "_Find"
 msgstr "Suchen"
 

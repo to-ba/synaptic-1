@@ -1872,7 +1872,6 @@ msgstr "Modifiche aperte"
 #: ../gtk/gtkbuilder/dialog_authentication.ui.h:2
 #: ../gtk/gtkbuilder/dialog_disc_label.ui.h:1
 #: ../gtk/gtkbuilder/dialog_new_repositroy.ui.h:6
-#, fuzzy
 msgid "_Cancel"
 msgstr "Annulla"
 
@@ -2468,7 +2467,6 @@ msgid "_Settings"
 msgstr "Impo_stazioni"
 
 #: ../gtk/gtkbuilder/window_main.ui.h:38
-#, fuzzy
 msgid "_Preferences"
 msgstr "Preferenze"
 
@@ -3107,7 +3105,6 @@ msgstr "Preferire versioni da: "
 #: ../gtk/gtkbuilder/window_preferences.ui.h:75
 #: ../gtk/gtkbuilder/window_setopt.ui.h:2
 #: ../gtk/gtkbuilder/window_summary.ui.h:3
-#, fuzzy
 msgid "_Apply"
 msgstr "Applica"
 
@@ -3117,7 +3114,6 @@ msgstr "Applica"
 #: ../gtk/gtkbuilder/window_repositories.ui.h:11
 #: ../gtk/gtkbuilder/window_tasks.ui.h:6
 #: ../gtk/gtkbuilder/dialog_authentication.ui.h:3
-#, fuzzy
 msgid "_OK"
 msgstr "OK"
 
@@ -3612,7 +3608,6 @@ msgid "History of installed, upgraded and removed software packages."
 msgstr "Cronologia dei pacchetti installati, aggiornati e rimossi."
 
 #: ../gtk/gtkbuilder/window_logview.ui.h:4
-#, fuzzy
 msgid "_Find"
 msgstr "Trova"
 

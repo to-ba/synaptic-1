@@ -1125,7 +1125,6 @@ msgid "-i=? Start with the initial Filter with given name\n"
 msgstr "-i=? Démarrer avec le nom donné comme filtre initial\n"
 
 #: ../gtk/gsynaptic.cc:79
-#, fuzzy
 msgid "-o=? Set an arbitrary configuration option, eg -o dir::cache=/tmp\n"
 msgstr "-o=? Définir une option de configuration, p.ex. -o dir::cache=/tmp\n"
 
@@ -1201,12 +1200,10 @@ msgstr ""
 "d'abord fermer cette application."
 
 #: ../gtk/gsynaptic.cc:430
-#, fuzzy
 msgid "Starting \"Synaptic Package Manager\" without administrative privileges"
 msgstr "Lancement sans les privilèges de l'administrateur"
 
 #: ../gtk/gsynaptic.cc:432
-#, fuzzy
 msgid ""
 "You will not be able to apply any changes, but you can still export the "
 "marked changes or create a download script for them."
@@ -1798,7 +1795,7 @@ msgid "Mark Suggested for Installation"
 msgstr "Sélectionner les paquets suggérés pour installation"
 
 #: ../gtk/rgmainwindow.cc:1629
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Removing package \"%s\" may render the system unusable.\n"
 "Are you sure you want to do that?"
@@ -1879,13 +1876,12 @@ msgstr "Ouvrir le journal des modifications"
 #: ../gtk/gtkbuilder/dialog_authentication.ui.h:2
 #: ../gtk/gtkbuilder/dialog_disc_label.ui.h:1
 #: ../gtk/gtkbuilder/dialog_new_repositroy.ui.h:6
-#, fuzzy
 msgid "_Cancel"
 msgstr "Annuler"
 
 #: ../gtk/rgmainwindow.cc:2029 ../gtk/rgmainwindow.cc:3408
 msgid "_Open"
-msgstr ""
+msgstr "_Ouvrir"
 
 #: ../gtk/rgmainwindow.cc:2076 ../gtk/rgmainwindow.cc:2673
 #: ../gtk/rgmainwindow.cc:2855 ../gtk/rgmainwindow.cc:3040
@@ -1899,7 +1895,7 @@ msgstr "Enregistrer les modifications"
 
 #: ../gtk/rgmainwindow.cc:2099 ../gtk/rgmainwindow.cc:3381
 msgid "_Save"
-msgstr ""
+msgstr "_Enregistrer"
 
 #: ../gtk/rgmainwindow.cc:2102
 msgid "Save full state, not only changes"
@@ -1938,7 +1934,6 @@ msgid "Starting help viewer..."
 msgstr "Lancement du visualisateur d'aide..."
 
 #: ../gtk/rgmainwindow.cc:2364
-#, fuzzy
 msgid ""
 "No help viewer is installed!\n"
 "\n"
@@ -2474,7 +2469,6 @@ msgid "_Settings"
 msgstr "_Configuration"
 
 #: ../gtk/gtkbuilder/window_main.ui.h:38
-#, fuzzy
 msgid "_Preferences"
 msgstr "Préférences"
 
@@ -3106,7 +3100,6 @@ msgstr "Préférer les versions de : "
 #: ../gtk/gtkbuilder/window_preferences.ui.h:75
 #: ../gtk/gtkbuilder/window_setopt.ui.h:2
 #: ../gtk/gtkbuilder/window_summary.ui.h:3
-#, fuzzy
 msgid "_Apply"
 msgstr "Appliquer"
 
@@ -3116,7 +3109,6 @@ msgstr "Appliquer"
 #: ../gtk/gtkbuilder/window_repositories.ui.h:11
 #: ../gtk/gtkbuilder/window_tasks.ui.h:6
 #: ../gtk/gtkbuilder/dialog_authentication.ui.h:3
-#, fuzzy
 msgid "_OK"
 msgstr "Accepter"
 
@@ -3312,7 +3304,6 @@ msgid "Automatic install"
 msgstr "Installer automatiquement"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:41
-#, fuzzy
 msgid "Packages installed automatically as part of a dependency"
 msgstr "Installé automatiquement en tant que dépendance"
 
@@ -3321,7 +3312,6 @@ msgid "Automatic removable"
 msgstr "Enlevable automatiquement"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:43
-#, fuzzy
 msgid ""
 "Packages installed automatically but no longer required by any other package"
 msgstr ""
@@ -3340,7 +3330,6 @@ msgid "Manual installed"
 msgstr "Installés manuellement"
 
 #: ../gtk/gtkbuilder/window_filters.ui.h:47
-#, fuzzy
 msgid "Packages installed manually (not as a dependency of something else)"
 msgstr "Installés manuellement (pas en tant que dépendance d'un autre paquet)"
 
@@ -3615,7 +3604,6 @@ msgid "History of installed, upgraded and removed software packages."
 msgstr "Historique des paquets installés, mis à jour ou supprimés."
 
 #: ../gtk/gtkbuilder/window_logview.ui.h:4
-#, fuzzy
 msgid "_Find"
 msgstr "Rechercher"
 
