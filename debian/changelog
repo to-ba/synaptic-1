@@ -1,3 +1,16 @@
+synaptic (0.83linuxmint2) sarah; urgency=medium
+
+  [ monsta ]
+  * Fix notebook expanding in the properties window
+
+  [ muzena ]
+  * Make croatian manual, translate hr.po, add manual-po hr.po file, add synaptic.hr.8 files, updates rules and rules.debian man lines to build all locale manpages, fix developers-references links in all manuals, add/fix missing Tabs in the properties dialog in croatian and english manuals, update new screenshots in english manual, add/fix missing categories to Category Selector in croatian and english manuals.
+
+  [ Clement Lefebvre ]
+  * Improved translations for a few languages (DE, FR, ES, IT)
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 22 Jun 2016 16:53:12 +0100
+
 synaptic (0.83linuxmint1) sarah; urgency=medium
 
   * Sarah
