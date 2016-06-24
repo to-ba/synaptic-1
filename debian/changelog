@@ -1,3 +1,9 @@
+synaptic (0.83linuxmint3) sarah; urgency=medium
+
+  * Don't color the search entry in yellow when performing a search
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 24 Jun 2016 20:04:03 +0100
+
 synaptic (0.83linuxmint2) sarah; urgency=medium
 
   [ monsta ]
