@@ -2778,7 +2778,7 @@ gboolean RGMainWindow::xapianDoSearch(void *data)
    RGFlushInterface();
    if(str == NULL || strlen(str) <= 1) {
       // reset the color
-      gtk_style_context_remove_provider(styleContext, GTK_STYLE_PROVIDER(_fastSearchCssProvider));
+      // gtk_style_context_remove_provider(styleContext, GTK_STYLE_PROVIDER(_fastSearchCssProvider));
       // if the user has cleared the search, refresh the view
       // Gtk-CRITICAL **: gtk_tree_view_unref_tree_helper: assertion `node != NULL' failed
       // at us, see LP: #38397 for more information
@@ -2795,8 +2795,8 @@ gboolean RGMainWindow::xapianDoSearch(void *data)
       me->refreshTable();
       // set color to a light yellow to make it more obvious that a search
       // is performed
-      gtk_style_context_add_provider(styleContext, GTK_STYLE_PROVIDER(_fastSearchCssProvider),
-                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+      // gtk_style_context_add_provider(styleContext, GTK_STYLE_PROVIDER(_fastSearchCssProvider),
+                                     // GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
    }
    me->setBusyCursor(false);
 
