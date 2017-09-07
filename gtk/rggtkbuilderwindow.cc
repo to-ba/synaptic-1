@@ -88,17 +88,17 @@ RGGtkBuilderWindow::RGGtkBuilderWindow(RGWindow *parent, string name, string mai
    _topBox = NULL;
 
    // honor foreign parent windows (to make embedding easy)
-   int id = _config->FindI("Volatile::ParentWindowId", -1);
-   if (id > 0) {
+   _parentWindowID = _config->FindI("Volatile::ParentWindowId", -1);
+   if (_parentWindowID > 0) {
       GdkWindow *win = gdk_x11_window_foreign_new_for_display(
-         gdk_display_get_default(), id);
+         gdk_display_get_default(), _parentWindowID);
       if(win) {
 	 gtk_widget_realize(_win);
 	 gdk_window_set_transient_for(GDK_WINDOW(gtk_widget_get_window(_win)), win);
       }
    }
    // if we have no parent, don't skip the taskbar hint
-   if(_config->FindB("Volatile::HideMainwindow",false) && id < 0)
+   if(_config->FindB("Volatile::HideMainwindow",false) && _parentWindowID < 0)
    {
       gtk_window_set_skip_taskbar_hint(GTK_WINDOW(_win), FALSE);
       gtk_window_set_urgency_hint(GTK_WINDOW(_win), TRUE);

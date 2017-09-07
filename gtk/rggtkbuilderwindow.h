@@ -40,6 +40,7 @@ class RGGtkBuilderWindow:public RGWindow {
  protected:
    GtkBuilder *_builder;
    GdkCursor *_busyCursor;
+   int _parentWindowID;
 
  public:
    RGGtkBuilderWindow(RGWindow *parent, string name, string main_widget = "");

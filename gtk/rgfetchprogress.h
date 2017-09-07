@@ -30,8 +30,6 @@
 #include <set>
 #include "rggtkbuilderwindow.h"
 
-
-
 class RGFetchProgress : public pkgAcquireStatus, public RGGtkBuilderWindow {
 
    struct Item {
@@ -50,6 +48,8 @@ class RGFetchProgress : public pkgAcquireStatus, public RGGtkBuilderWindow {
    GtkWidget *_mainProgressBar; // GtkProgressBar
 
    GtkWidget *_sock;
+
+   int _parentWindowID;
 
    PangoLayout *_layout;
    GtkTreeViewColumn *_statusColumn;

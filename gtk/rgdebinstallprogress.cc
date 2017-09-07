@@ -52,6 +52,7 @@
 #include <vte/vte.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <libxapp/xapp-gtk-window.h>
 
 #include "i18n.h"
 
@@ -593,8 +594,12 @@ void RGDebInstallProgress::updateInterface()
 
 	 float val = atof(percent)/100.0;
  	 //cout << "progress: " << val << endl;
-         if (fabs(val-gtk_progress_bar_get_fraction(GTK_PROGRESS_BAR(_pbarTotal))) > 0.1)
+         if (fabs(val-gtk_progress_bar_get_fraction(GTK_PROGRESS_BAR(_pbarTotal))) > 0.1) {
             gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(_pbarTotal), val);
+            if (_parentWindowID > 0) {
+              xapp_set_xid_progress(_parentWindowID, atof(percent));
+            }
+         }
 
 	 if(str!=NULL)
 	    gtk_label_set_text(GTK_LABEL(_label_status),utf8(str));
@@ -744,6 +749,11 @@ void RGDebInstallProgress::finishUpdate()
    if (_startCounting) {
       gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(_pbarTotal), 1.0);
    }
+
+   if (_parentWindowID > 0) {
+      xapp_set_xid_progress(_parentWindowID, 0);
+    }
+
    RGFlushInterface();
 
    GtkWidget *_closeB = GTK_WIDGET(gtk_builder_get_object(_builder, "button_close"));

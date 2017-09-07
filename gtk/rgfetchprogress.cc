@@ -38,6 +38,9 @@
 #include <stdio.h>
 #include <pango/pango.h>
 #include <gtk/gtk.h>
+
+#include <libxapp/xapp-gtk-window.h>
+
 #include <cassert>
 
 #include "i18n.h"
@@ -128,6 +131,8 @@ RGFetchProgress::RGFetchProgress(RGWindow *win)
 
    PangoContext *context = gdk_pango_context_get();
    _layout = pango_layout_new(context);
+
+   _parentWindowID = _config->FindI("Volatile::ParentWindowId", -1);
 
    // check if we should run embedded somewhere
    // we need to make the window show before we obtain the _gc
@@ -319,6 +324,10 @@ bool RGFetchProgress::Pulse(pkgAcquire *Owner)
    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(_mainProgressBar),
                                  percent / 100.0);
 
+   if (_parentWindowID > 0) {
+      xapp_set_xid_progress(_parentWindowID, (int)percent);
+    }
+
    for (pkgAcquire::Worker * I = Owner->WorkersBegin(); I != 0;
         I = Owner->WorkerStep(I)) {
 
@@ -377,6 +386,10 @@ void RGFetchProgress::Start()
 
 void RGFetchProgress::Stop()
 {
+   if (_parentWindowID > 0) {
+      xapp_set_xid_progress(_parentWindowID, 0);
+   }
+
    //cout << "RGFetchProgress::Stop()" << endl;
    RGFlushInterface();
    if(_sock != NULL) {
