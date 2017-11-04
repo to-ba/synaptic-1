@@ -1,3 +1,13 @@
+synaptic (0.83linuxmint4) sylvia; urgency=medium
+
+  [ muzena ]
+  * Add Cinnamon and Mate DE in manual
+
+  [ Clement Lefebvre ]
+  * Add support for window-progress
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sat, 04 Nov 2017 12:44:46 +0000
+
 synaptic (0.83linuxmint3) sarah; urgency=medium
 
   * Don't color the search entry in yellow when performing a search
